@@ -12,52 +12,82 @@ import {
   GraduationCap,
   Database,
   ChevronRight,
+  CheckCircle,
+  CalendarRange,
+  Code2,
+  FileText,
+  Briefcase,
+  FolderKanban,
+  Building2,
+  Timer,
+  Wallet,
+  ListTodo,
 } from 'lucide-react';
+
+interface NavSection {
+  title: string;
+  items: {
+    route: AppRoute;
+    label: string;
+    icon: React.FC<{ className?: string }>;
+    count?: number;
+  }[];
+}
 
 export const Sidebar: React.FC = () => {
   const { currentRoute, setCurrentRoute, tasks, user, logout, storageMode } = useApp();
 
   const pendingCount = tasks.filter((t) => t.status !== 'Completed').length;
 
-  const navItems: { route: AppRoute; label: string; icon: React.FC<{ className?: string }>; count?: number }[] = [
+  const navSections: NavSection[] = [
     {
-      route: 'dashboard',
-      label: 'Dashboard',
-      icon: LayoutDashboard,
+      title: 'Core Workspace',
+      items: [
+        { route: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { route: 'tasks', label: 'My Tasks', icon: CheckSquare, count: pendingCount > 0 ? pendingCount : undefined },
+        { route: 'calendar', label: 'Academic Calendar', icon: CalendarDays },
+        { route: 'study-planner', label: 'Study Planner', icon: Clock },
+        { route: 'ai-planner', label: 'AI Study Planner', icon: Sparkles },
+      ],
     },
     {
-      route: 'tasks',
-      label: 'My Tasks',
-      icon: CheckSquare,
-      count: pendingCount > 0 ? pendingCount : undefined,
+      title: 'Academics',
+      items: [
+        { route: 'attendance', label: 'Attendance Tracker', icon: CheckCircle },
+        { route: 'exams', label: 'Exams & Revision', icon: CalendarRange },
+        { route: 'coding-practice', label: 'Coding Practice', icon: Code2 },
+        { route: 'notes', label: 'Course Notes', icon: FileText },
+      ],
     },
     {
-      route: 'calendar',
-      label: 'Academic Calendar',
-      icon: CalendarDays,
+      title: 'Career & Growth',
+      items: [
+        { route: 'career', label: 'Career Hub', icon: Briefcase },
+      ],
     },
     {
-      route: 'study-planner',
-      label: 'Study Planner',
-      icon: Clock,
+      title: 'Student Life',
+      items: [
+        { route: 'projects-teamwork', label: 'Projects & Teams', icon: FolderKanban },
+        { route: 'campus-life', label: 'Campus & Clubs', icon: Building2 },
+        { route: 'focus-timer', label: 'Focus Timer', icon: Timer },
+        { route: 'budget', label: 'Student Budget', icon: Wallet },
+        { route: 'personal-organizer', label: 'Personal Organizer', icon: ListTodo },
+      ],
     },
     {
-      route: 'ai-planner',
-      label: 'AI Study Planner',
-      icon: Sparkles,
-    },
-    {
-      route: 'settings',
-      label: 'Settings',
-      icon: Settings,
+      title: 'System',
+      items: [
+        { route: 'settings', label: 'Settings & Data', icon: Settings },
+      ],
     },
   ];
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col justify-between h-screen sticky top-0 select-none z-30 shrink-0">
       {/* Top Branding Section */}
-      <div>
-        <div className="p-6 border-b border-slate-100">
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="p-5 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#172554] flex items-center justify-center text-white shadow-xs">
               <GraduationCap className="w-5 h-5 text-blue-400" />
@@ -73,47 +103,51 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="p-3 space-y-1">
-          <div className="px-3 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Workspace
-          </div>
+        {/* Scrollable Grouped Navigation */}
+        <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+          {navSections.map((section, sIdx) => (
+            <div key={sIdx} className="space-y-0.5">
+              <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                {section.title}
+              </div>
 
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentRoute === item.route;
-            return (
-              <button
-                key={item.route}
-                onClick={() => setCurrentRoute(item.route)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  isActive
-                    ? 'bg-slate-900 text-white shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <Icon
-                    className={`w-4 h-4 transition-colors ${
-                      isActive ? 'text-blue-400' : 'text-slate-400'
-                    }`}
-                  />
-                  <span>{item.label}</span>
-                </div>
-                {item.count !== undefined && (
-                  <span
-                    className={`text-[11px] font-mono tabular-nums px-2 py-0.5 rounded-md ${
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = currentRoute === item.route;
+                return (
+                  <button
+                    key={item.route}
+                    onClick={() => setCurrentRoute(item.route)}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white/20 text-white'
-                        : 'bg-slate-100 text-slate-600'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
-                    {item.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Icon
+                        className={`w-4 h-4 shrink-0 transition-colors ${
+                          isActive ? 'text-blue-400' : 'text-slate-400'
+                        }`}
+                      />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    {item.count !== undefined && (
+                      <span
+                        className={`text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-md ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {item.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </div>
 

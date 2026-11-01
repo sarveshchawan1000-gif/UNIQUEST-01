@@ -16,6 +16,16 @@ import {
   CalendarDays,
   Clock,
   Settings,
+  CheckCircle,
+  CalendarRange,
+  Code2,
+  FileText,
+  Briefcase,
+  FolderKanban,
+  Building2,
+  Timer,
+  Wallet,
+  ListTodo,
 } from 'lucide-react';
 import { MobileNav } from './MobileNav';
 
@@ -66,37 +76,22 @@ export const Header: React.FC = () => {
     icon: React.FC<{ className?: string }>;
     badge?: number;
   }[] = [
-    {
-      route: 'dashboard',
-      label: 'Student Dashboard',
-      icon: LayoutDashboard,
-    },
-    {
-      route: 'tasks',
-      label: 'My Tasks',
-      icon: CheckSquare,
-      badge: pendingCount > 0 ? pendingCount : undefined,
-    },
-    {
-      route: 'calendar',
-      label: 'Academic Calendar',
-      icon: CalendarDays,
-    },
-    {
-      route: 'study-planner',
-      label: 'Study Planner',
-      icon: Clock,
-    },
-    {
-      route: 'ai-planner',
-      label: 'AI Study Planner',
-      icon: Sparkles,
-    },
-    {
-      route: 'settings',
-      label: 'Settings & Data',
-      icon: Settings,
-    },
+    { route: 'dashboard', label: 'Student Dashboard', icon: LayoutDashboard },
+    { route: 'tasks', label: 'My Tasks', icon: CheckSquare, badge: pendingCount > 0 ? pendingCount : undefined },
+    { route: 'calendar', label: 'Academic Calendar', icon: CalendarDays },
+    { route: 'study-planner', label: 'Study Planner', icon: Clock },
+    { route: 'ai-planner', label: 'AI Study Planner', icon: Sparkles },
+    { route: 'attendance', label: 'Attendance Tracker', icon: CheckCircle },
+    { route: 'exams', label: 'Exams & Revision', icon: CalendarRange },
+    { route: 'coding-practice', label: 'Coding Practice', icon: Code2 },
+    { route: 'notes', label: 'Course Notes', icon: FileText },
+    { route: 'career', label: 'Career Hub', icon: Briefcase },
+    { route: 'projects-teamwork', label: 'Projects & Teams', icon: FolderKanban },
+    { route: 'campus-life', label: 'Campus & Clubs', icon: Building2 },
+    { route: 'focus-timer', label: 'Focus Timer', icon: Timer },
+    { route: 'budget', label: 'Student Budget', icon: Wallet },
+    { route: 'personal-organizer', label: 'Personal Organizer', icon: ListTodo },
+    { route: 'settings', label: 'Settings & Data', icon: Settings },
   ];
 
   // Context titles & breadcrumbs
@@ -106,6 +101,16 @@ export const Header: React.FC = () => {
     calendar: 'Academic Calendar',
     'study-planner': 'Study Planner',
     'ai-planner': 'AI Study Planner',
+    attendance: 'Attendance Tracker',
+    exams: 'Exams & Revision Hub',
+    'coding-practice': 'Coding Practice & DSA',
+    notes: 'Course Notes',
+    career: 'Career & Placement Hub',
+    'projects-teamwork': 'Projects & Teamwork',
+    'campus-life': 'Campus & Clubs',
+    'focus-timer': 'Focus Timer',
+    budget: 'Student Budget',
+    'personal-organizer': 'Personal Organizer',
     settings: 'Settings & Data',
   };
 

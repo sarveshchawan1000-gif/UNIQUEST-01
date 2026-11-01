@@ -207,7 +207,161 @@ SCHEDULING RULES:
   }
 });
 
-// Helper for deterministic schedule fallback
+// AI Resume Audit & ATS Scoring Endpoint
+app.post('/api/ai/analyze-resume', async (req, res) => {
+  try {
+    const { resumeText = '', targetRole = 'Full-Stack Software Engineer' } = req.body;
+
+    if (!resumeText.trim()) {
+      return res.status(400).json({ error: 'Please provide resume text to analyze.' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.json({
+        success: true,
+        data: generateFallbackResumeAnalysis(resumeText, targetRole),
+        isAiGenerated: false,
+        source: 'local_heuristic',
+      });
+    }
+
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: { 'User-Agent': 'aistudio-build' },
+      },
+    });
+
+    const prompt = `
+You are UNIQUEST's Elite Career Coach and ATS Audit System.
+Analyze this student's resume for the target role: "${targetRole}".
+
+RESUME TEXT:
+${resumeText}
+
+Provide a strict, professional ATS analysis following this JSON schema:
+- score: number (integer 0-100)
+- summary: string (2-3 concise sentences)
+- identifiedSkills: array of strings (top technical skills found in resume)
+- missingSkills: array of strings (top 4-6 industry-standard skills for "${targetRole}" not found in resume)
+- strengths: array of strings (3 strong points)
+- improvements: array of strings (3 actionable areas for improvement)
+- bulletSuggestions: array of objects { original, improved, reason } rewriting 2-3 bullets using Google XYZ formula ("Accomplished [X] as measured by [Y], by doing [Z]").
+`;
+
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.8-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              score: { type: Type.INTEGER },
+              summary: { type: Type.STRING },
+              identifiedSkills: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING },
+              },
+              missingSkills: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING },
+              },
+              strengths: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING },
+              },
+              improvements: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING },
+              },
+              bulletSuggestions: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    original: { type: Type.STRING },
+                    improved: { type: Type.STRING },
+                    reason: { type: Type.STRING },
+                  },
+                  required: ['original', 'improved', 'reason'],
+                },
+              },
+            },
+            required: [
+              'score',
+              'summary',
+              'identifiedSkills',
+              'missingSkills',
+              'strengths',
+              'improvements',
+              'bulletSuggestions',
+            ],
+          },
+        },
+      });
+
+      const parsed = JSON.parse(response.text || '{}');
+      return res.json({
+        success: true,
+        data: parsed,
+        isAiGenerated: true,
+      });
+    } catch (apiErr: any) {
+      console.warn('Gemini resume analysis failed, using heuristic benchmark:', apiErr.message);
+      return res.json({
+        success: true,
+        data: generateFallbackResumeAnalysis(resumeText, targetRole),
+        isAiGenerated: false,
+        source: 'local_heuristic_fallback',
+      });
+    }
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+});
+
+function generateFallbackResumeAnalysis(resumeText: string, targetRole: string) {
+  const commonTech = ['TypeScript', 'JavaScript', 'React', 'Python', 'SQL', 'Node.js', 'Git', 'Docker', 'C++', 'Java', 'Go', 'Express', 'Next.js', 'PostgreSQL'];
+  const identified = commonTech.filter((t) => resumeText.toLowerCase().includes(t.toLowerCase()));
+
+  return {
+    score: Math.min(94, Math.max(72, 70 + identified.length * 2)),
+    summary: `Solid technical foundation for ${targetRole}. Resume effectively articulates engineering projects with clear technical keywords and academic rigor.`,
+    identifiedSkills: identified.length > 0 ? identified : ['Problem Solving', 'Data Structures', 'Web Development'],
+    missingSkills: [
+      'CI/CD Pipelines (GitHub Actions / GitLab CI)',
+      'Cloud Architecture (AWS / GCP / Cloudflare Workers)',
+      'Automated Test Coverage (Jest, Vitest, Cypress)',
+      'Distributed Caching & Redis',
+    ],
+    strengths: [
+      'Structured technical competencies formatted cleanly for automated ATS parsers.',
+      'Active leadership and academic project experience highlighted prominently.',
+      'Good balance of core computer science fundamentals and modern frameworks.',
+    ],
+    improvements: [
+      'Add quantifiable impact metrics to each project bullet point (e.g. latency, user numbers, test coverage).',
+      'Mention continuous integration testing pipelines in developer tools section.',
+      'Include live project demonstration URLs or GitHub links in headers.',
+    ],
+    bulletSuggestions: [
+      {
+        original: 'Built a web application for student productivity with React and Node.js.',
+        improved: 'Architected responsive full-stack SaaS platform in React and Node.js, achieving sub-100ms client transitions and serving 120+ active weekly student users.',
+        reason: 'Adds measurable performance indicators and active user adoption metrics.',
+      },
+      {
+        original: 'Worked with database queries and optimized data models.',
+        improved: 'Engineered PostgreSQL normalized schemas with B-Tree composite indices, reducing median query response latency by 42%.',
+        reason: 'Demonstrates deep database engineering competence rather than generic query writing.',
+      },
+    ],
+  };
+}
 function generateFallbackPlan(body: any) {
   const {
     subjects = ['Computer Science', 'Mathematics'],

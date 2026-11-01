@@ -13,6 +13,16 @@ import { CalendarView } from './components/calendar/CalendarView';
 import { StudyPlannerView } from './components/study-planner/StudyPlannerView';
 import { AIPlannerView } from './components/ai-planner/AIPlannerView';
 import { SettingsView } from './components/settings/SettingsView';
+import { AttendanceView } from './components/academics/AttendanceView';
+import { ExamsView } from './components/academics/ExamsView';
+import { CodingPracticeView } from './components/academics/CodingPracticeView';
+import { NotesView } from './components/academics/NotesView';
+import { CareerView } from './components/career/CareerView';
+import { ProjectsTeamworkView } from './components/student-life/ProjectsTeamworkView';
+import { CampusClubsView } from './components/student-life/CampusClubsView';
+import { FocusTimerView } from './components/student-life/FocusTimerView';
+import { BudgetView } from './components/student-life/BudgetView';
+import { PersonalOrganizerView } from './components/student-life/PersonalOrganizerView';
 import { AuthPages } from './components/auth/AuthPages';
 import { TaskModal } from './components/tasks/TaskModal';
 import { StudySessionModal } from './components/study-planner/StudySessionModal';
@@ -52,6 +62,16 @@ const AppContent: React.FC = () => {
           {currentRoute === 'calendar' && <CalendarView />}
           {currentRoute === 'study-planner' && <StudyPlannerView />}
           {currentRoute === 'ai-planner' && <AIPlannerView />}
+          {currentRoute === 'attendance' && <AttendanceView />}
+          {currentRoute === 'exams' && <ExamsView />}
+          {currentRoute === 'coding-practice' && <CodingPracticeView />}
+          {currentRoute === 'notes' && <NotesView />}
+          {currentRoute === 'career' && <CareerView />}
+          {currentRoute === 'projects-teamwork' && <ProjectsTeamworkView />}
+          {currentRoute === 'campus-life' && <CampusClubsView />}
+          {currentRoute === 'focus-timer' && <FocusTimerView />}
+          {currentRoute === 'budget' && <BudgetView />}
+          {currentRoute === 'personal-organizer' && <PersonalOrganizerView />}
           {currentRoute === 'settings' && <SettingsView />}
         </main>
       </div>
