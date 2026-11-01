@@ -373,7 +373,7 @@ export const AIPlannerView: React.FC = () => {
           </button>
         </div>
 
-        {/* Live Loading Telemetry for Hackathon Demo */}
+        {/* Real-time schedule optimization progress */}
         {isGenerating && (
           <div className="p-4 rounded-xl bg-slate-900 text-white border border-slate-800 space-y-2 animate-in fade-in duration-200">
             <div className="flex items-center justify-between text-xs font-semibold">

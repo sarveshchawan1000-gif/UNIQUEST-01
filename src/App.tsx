@@ -18,8 +18,6 @@ import { TaskModal } from './components/tasks/TaskModal';
 import { StudySessionModal } from './components/study-planner/StudySessionModal';
 import { ToastContainer } from './components/ui/Toast';
 
-import { DemoWalkthroughBar } from './components/demo/DemoWalkthroughBar';
-
 const AppContent: React.FC = () => {
   const { currentRoute, isAuthenticated } = useApp();
 
@@ -46,7 +44,6 @@ const AppContent: React.FC = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <DemoWalkthroughBar />
         <Header />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8">

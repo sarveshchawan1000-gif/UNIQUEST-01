@@ -115,11 +115,6 @@ export const AuthPages: React.FC = () => {
           One platform. Every student goal.
         </p>
 
-        {/* Demo Mode Pill */}
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-          <span>Academic SaaS Workspace • {storageMode === 'supabase' ? 'Supabase Connected' : 'Demo Ready'}</span>
-        </div>
       </div>
 
       {/* Main Card */}
@@ -212,8 +207,8 @@ export const AuthPages: React.FC = () => {
                 </button>
               </form>
 
-              {/* Quick 1-Click Demo Sign In for Hackathon Judges */}
-              <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+              {/* Quick sample account access */}
+              <div className="mt-4 pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={async () => {
@@ -221,10 +216,10 @@ export const AuthPages: React.FC = () => {
                     await login('alex.rivera@stanford.edu', 'student123');
                     setIsLoading(false);
                   }}
-                  className="w-full py-2.5 px-3 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-3 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                  <span>One-Click Demo Sign In (Alex Rivera, Stanford CS)</span>
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Explore with Sample Student Account</span>
                 </button>
               </div>
 
